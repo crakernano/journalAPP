@@ -1,9 +1,9 @@
 import React from 'react';
-import { useDispatch, useSelector  } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { login } from '../../actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Link } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
-import {startLoginEmailPassword, startGoogleLogin } from '../../actions/auth';
+import { startLoginEmailPassword, startGoogleLogin } from '../../actions/auth';
 
 export const LoginScreen = () => {
 
@@ -12,11 +12,10 @@ export const LoginScreen = () => {
 
     const [ formValues, handleInputChange ] = useForm({
         email: '',
-        password: '123456789'
+        password: ''
     });
 
-    const {email, password} = formValues;
-
+    const { email, password } = formValues;
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -27,11 +26,15 @@ export const LoginScreen = () => {
         dispatch( startGoogleLogin() );
     }
 
+
     return (
         <>
             <h3 className="auth__title">Login</h3>
 
-            <form onSubmit={ handleLogin }>
+            <form 
+                onSubmit={ handleLogin }
+                className="animate__animated animate__fadeIn animate__faster"
+            >
 
                 <input 
                     type="text"

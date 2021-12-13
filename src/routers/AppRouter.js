@@ -6,16 +6,15 @@ import {
   } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
-
-import { app as firebase } from '../firebase/firebase-config'
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from '@firebase/auth';
+//import { app } from '../firebase/firebase-config'
 import { AuthRouter } from './AuthRouter';
 import { PrivateRoute } from './PrivateRoute';
 
 import { JournalScreen } from '../components/journal/JournalScreen';
 import { login } from '../actions/auth';
 import { PublicRoute } from './PublicRoute';
-//import { startLoadingNotes } from '../actions/notes';
+import { startLoadingNotes } from '../actions/notes';
 
 export const AppRouter = () => {
 
@@ -25,15 +24,15 @@ export const AppRouter = () => {
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
 
 
-    const auth = getAuth();
+
     useEffect(() => {
-        
-        onAuthStateChanged( auth, async(user) => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) =>{
 
             if ( user?.uid ) {
                 dispatch( login( user.uid, user.displayName ) );
                 setIsLoggedIn( true );
-                //dispatch( startLoadingNotes( user.uid ) );
+                dispatch( startLoadingNotes( user.uid ) );
 
             } else {
                 setIsLoggedIn( false );

@@ -4,30 +4,35 @@ import { db } from '../firebase/firebase-config';
 import { types } from '../types/types';
 import { loadNotes } from '../helpers/loadNotes';
 import { fileUpload } from '../helpers/fileUpload';
+import {  doc, setDoc, updateDoc  } from "firebase/firestore";
 
 
 export const startNewNote = () => {
     return async( dispatch, getState ) => {
 
         const { uid } = getState().auth;
-        
+        console.log("UID: " + uid);
         const newNote = {
-            title: '',
-            body: '',
+            title: 'Hola, este es el titulo',
+            body: 'Y este es el body',
             date: new Date().getTime()
         }
 
         try {
             //const doc = await db.collection(`${ uid }/journal/notes`).add( newNote );
-    
-            //dispatch( activeNote( doc.id, newNote ) );
-            //dispatch( addNewNote( doc.id, newNote ) );
-            Swal.fire(
-                'The Internet?',
-                'That thing is still around?',
-                'question'
-              )
-            
+            //const doc = collection(db, `${ uid }/journal/notes`).add( newNote );
+            /*
+            await setDoc(doc(db, `${ uid }/journal/notes`), {
+                note: newNote,
+                state: "CA",
+                country: "USA"
+              });
+            */
+            const docNote = doc(db, `${ uid }/journal/notes`, "notes");
+            setDoc(docNote, newNote);
+            dispatch( activeNote( docNote.id, newNote ) );
+            dispatch( addNewNote( docNote.id, newNote ) );
+
         } catch (error) {
             console.log(error);
         }
@@ -80,7 +85,9 @@ export const startSaveNote = ( note ) => {
         const noteToFirestore = { ...note };
         delete noteToFirestore.id;
 
-        await db.doc(`${ uid }/journal/notes/${ note.id }`).update( noteToFirestore );
+        //await db.doc(`${ uid }/journal/notes/${ note.id }`).update( noteToFirestore );
+        const updateNote = doc(db, `${ uid }/journal/notes`, "notes");
+        await updateDoc(updateNote, noteToFirestore);
 
         dispatch( refreshNote( note.id, noteToFirestore ) );
         Swal.fire('Saved', note.title, 'success');

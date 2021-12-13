@@ -1,21 +1,33 @@
 import { types } from "../types/types"
 import Swal from 'sweetalert2';
 
-import { getAuth, signInWithPopup, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword, signOut  } from 'firebase/auth';
+import { getAuth, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut  } from 'firebase/auth';
 
 import {app as firebase, googleAuthProvider } from '../firebase/firebase-config';
 import { startLoading, finishLoading } from './ui';
 
-export const login = (uid, displayName) => {
-    return {
-        type: types.login,
-        payload:{
-            uid,
-            displayName
-        }
+
+export const startLoginEmailPassword = (email, password) =>{
+    return (dispatch) => {
+
+        dispatch( startLoading() );
+        
+        const auth = getAuth(firebase);
+        return signInWithEmailAndPassword(auth, email, password )
+            .then( ({ user }) => {
+                dispatch(login( user.uid, user.displayName ));
+                console.log("UID de USUARIO: " + user.uid);
+                dispatch( finishLoading() );
+            })
+            .catch( e => {
+                console.log(e);
+                dispatch( finishLoading() );
+                Swal.fire('Error', e.message, 'error');
+            })
+
     }
 }
-
+ 
 export const startGoogleLogin = () =>{
     return (dispatch) =>{
         const auth = getAuth();
@@ -26,27 +38,15 @@ export const startGoogleLogin = () =>{
     }
 }
 
-export const startLoginEmailPassword = (email, password) => {
-    const auth = getAuth();
-    return (dispatch) => {
-
-        dispatch( startLoading() );
-
-        return signInWithEmailAndPassword( auth, email, password )
-            .then( ({ user }) => {
-                dispatch(login( user.uid, user.displayName ));
-
-                dispatch( finishLoading() );
-                
-            })
-            .catch( e => {
-                console.log(e);
-                dispatch( finishLoading() );
-                Swal.fire('Error', e.message, 'error');
-            })
-
+export const login = (uid, displayName) =>(
+    {
+        type:types.login,
+        payload: {
+            uid,
+            displayName
+        }
     }
-}
+)
 
 export const startRegisterWithEmailPasswordName =  (email, password, name) =>{
 
