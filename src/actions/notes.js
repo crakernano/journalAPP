@@ -4,7 +4,7 @@ import { db } from '../firebase/firebase-config';
 import { types } from '../types/types';
 import { loadNotes } from '../helpers/loadNotes';
 import { fileUpload } from '../helpers/fileUpload';
-import {  doc, setDoc, updateDoc  } from "firebase/firestore";
+import {  doc, setDoc,  updateDoc, addDoc, collection } from "firebase/firestore";
 
 
 export const startNewNote = () => {
@@ -28,8 +28,9 @@ export const startNewNote = () => {
                 country: "USA"
               });
             */
-            const docNote = doc(db, `${ uid }/journal/notes`, "notes");
-            setDoc(docNote, newNote);
+            //const docNote = doc(db, `${ uid }/journal/notes`);
+            //addDoc(docNote, newNote);
+            const docNote = await addDoc(collection(db, `${ uid }/journal/notes`), newNote);
             dispatch( activeNote( docNote.id, newNote ) );
             dispatch( addNewNote( docNote.id, newNote ) );
 
