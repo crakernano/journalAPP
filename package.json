@@ -1,7 +1,23 @@
 {
-  "name": "journal-app",
+  "name": "react-journal-app",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "main": "dist/index.js",
+  "homepage": "",
+  "repository": {
+    "url": "https://github.com/crakernano/journalAPP",
+    "type": "git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -39,5 +55,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "semantic-release": "^18.0.1"
+  }, 
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/npm",
+    "@semantic-release/git"
+  ]
 }
